@@ -1,0 +1,23 @@
+{
+  "name": "postcard-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db": "knex --knexfile database/knexfile.js",
+    "db:migrate:make": "npm run db migrate:make",
+    "db:migrate:latest": "npm run db migrate:latest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "knex": "^0.14.0",
+    "sqlite3": "^3.1.13"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  }
+}
