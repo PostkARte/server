@@ -6,7 +6,8 @@ exports.up = function(knex, Promise) {
     table.string('url')
     table.integer('postcard_id').notNullable()
     table.foreign('postcard_id')
-    table.timestamps()
+    table.uuid('uuid').unique().notNullable()
+    table.timestamps(true, true)
   })
 };
 
