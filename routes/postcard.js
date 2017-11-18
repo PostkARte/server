@@ -50,8 +50,8 @@ router.post(
   (req, res) => {
     const { tempAssets: assets } = req
     createPostcard({ ...req.body, assets })
-      .then(result => res.send({ code: 200, message: 'OK' }))
-      .catch(() => res.send({ code: 500, message: 'Something went wrong' }))
+      .then(code => res.send({ code: 200, message: code }))
+      .catch((err) => res.send({ code: 500, message: `Something went wrong: ${err}` }))
   }
 )
 
