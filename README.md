@@ -13,4 +13,7 @@
 - return postcard data corresponding to the provided code
 
 3. (POST) /postcard
-- fields: image(Array[File]), video(Array[File]), audio(Array[File]), latitude(Float), longitude(Float)
+- fields: postcard(File), image(Array[File]), video(Array[File]), audio(Array[File]), latitude(Float), longitude(Float)
+
+4. (POST) /postcard/match
+- fields: postcard(File)
