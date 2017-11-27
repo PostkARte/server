@@ -8,6 +8,7 @@ const db = require('../database')
 const createPostcard = require('../handlers/createPostcard')
 const getPostcardWithAssets = require('../handlers/getPostcardWithAssets')
 const saveToRecognizer = require('../handlers/saveToRecognizer')
+const matchFromRecognizer = require('../handlers/matchFromRecognizer')
 
 const router = express.Router()
 
@@ -54,10 +55,29 @@ router.post(
   (req, res) => {
     const { tempAssets: assets } = req
     const postcardFile = req.files.postcard[0]
-    createPostcard({ ...req.body, assets, uuid: postcardFile.filename.split('.')[0]  })
-      .then((code) => saveToRecognizer({ code, path: postcardFile.path }))
-      .then((code) => res.send({ code: 200, message: code }))
-      .catch((err) => res.send({ code: 500, message: `Something went wrong: ${err}` }))
+    createPostcard({
+      ...req.body,
+      assets,
+      uuid: postcardFile.filename.split('.')[0]
+    })
+      .then(code => saveToRecognizer({ code, path: postcardFile.path }))
+      .then(code => res.send({ code: 200, message: code }))
+      .catch(err =>
+        res.send({ code: 500, message: `Something went wrong: ${err}` })
+      )
+  }
+)
+
+router.post(
+  '/match',
+  upload.fields([{ name: 'postcard', maxCount: 1 }]),
+  (req, res) => {
+    const postcardFile = req.files.postcard[0]
+    matchFromRecognizer(postcardFile.path)
+      .then(code => res.send({ code: 200, message: code }))
+      .catch(err =>
+        res.send({ code: 500, message: `Something went wrong: ${err}` })
+      )
   }
 )
 
