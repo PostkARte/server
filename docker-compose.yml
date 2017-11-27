@@ -9,6 +9,7 @@ services:
     command: ["npm", "start"]
     environment:
       - SERVER_HOST=${SERVER_HOST}
+      - RECOGNIZER_HOST=${RECOGNIZER_HOST}
     volumes:
       - ./:/usr/share/app
     restart: unless-stopped

@@ -1,6 +1,6 @@
 const db = require('../database')
 
-const URL_PREFIX = 'localhost:3000'
+const urlPrefix = process.env.SERVER_HOST
 
 module.exports = ({ code }) => {
   return db
@@ -18,7 +18,7 @@ module.exports = ({ code }) => {
             assets: assets.map(asset => {
               let realUrl = asset.url
               if (asset.url[0] === '/') {
-                realUrl = `${URL_PREFIX}/upload/${asset.type}${realUrl}`
+                realUrl = `${urlPrefix}/upload/${asset.type}${realUrl}`
               }
               return {
                 ...asset,

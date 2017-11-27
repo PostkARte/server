@@ -7,6 +7,7 @@ const db = require('../database')
 
 const createPostcard = require('../handlers/createPostcard')
 const getPostcardWithAssets = require('../handlers/getPostcardWithAssets')
+const saveToRecognizer = require('../handlers/saveToRecognizer')
 
 const router = express.Router()
 
@@ -22,7 +23,9 @@ const storage = multer.diskStorage({
     if (!req.tempAssets) {
       req.tempAssets = []
     }
-    req.tempAssets.push({ uuid, filename, type: file.fieldname })
+    if (file.fieldname !== 'postcard') {
+      req.tempAssets.push({ uuid, filename, type: file.fieldname })
+    }
     cb(null, filename)
   }
 })
@@ -43,14 +46,17 @@ router.get('/code/:code', (req, res) => {
 router.post(
   '/',
   upload.fields([
+    { name: 'postcard', maxCount: 1 },
     { name: 'image', maxCount: 10 },
-    { name: 'video', maxCount: 1 },
-    { name: 'audio', maxCount: 1 }
+    { name: 'video', maxCount: 10 },
+    { name: 'audio', maxCount: 10 }
   ]),
   (req, res) => {
     const { tempAssets: assets } = req
-    createPostcard({ ...req.body, assets })
-      .then(code => res.send({ code: 200, message: code }))
+    const postcardFile = req.files.postcard[0]
+    createPostcard({ ...req.body, assets, uuid: postcardFile.filename.split('.')[0]  })
+      .then((code) => saveToRecognizer({ code, path: postcardFile.path }))
+      .then((code) => res.send({ code: 200, message: code }))
       .catch((err) => res.send({ code: 500, message: `Something went wrong: ${err}` }))
   }
 )

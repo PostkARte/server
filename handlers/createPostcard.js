@@ -1,13 +1,12 @@
 const Hashids = require('hashids')
-const uuidV4 = require('uuid').v4
 const db = require('../database')
 
 const hashids = new Hashids('PostkARte', 6, 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789')
 
-module.exports = ({ assets, latitude, longitude }) => {
+module.exports = ({ assets, latitude, longitude, uuid }) => {
   return db.transaction(trx =>
     trx
-      .insert({ code: 'temp', latitude, longitude, uuid: uuidV4() })
+      .insert({ code: 'temp', latitude, longitude, uuid })
       .into('postcard')
       .then(data => data[0])
       .then(postcardId => {
