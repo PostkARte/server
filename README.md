@@ -4,6 +4,12 @@
 2. (For the first time) Run `bash enter_node_env.sh` and run `npm install`
 3. Run `bash run_dev_server.sh`
 
+# Clear database
+
+1. Run `bash enter_node_env.sh` and run `npm run clear-upload`
+2. Run `rm database/data.sqlite`
+3. Run `bash enter_node_env.sh` and run `npm run db:migrate:latest`
+
 # Available APIs
 
 1. (GET) /postcard
