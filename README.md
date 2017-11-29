@@ -20,6 +20,8 @@
 
 3. (POST) /postcard
 - fields: postcard(File), image(Array[File]), video(Array[File]), audio(Array[File]), latitude(Float), longitude(Float)
+- return { code: 200, message: [code] } or { code: 500, message: [err] }
 
 4. (POST) /postcard/match
 - fields: postcard(File)
+- return { code: 200, message: [postcard data] } or { code: 500, message: [err] }

@@ -74,7 +74,7 @@ router.post(
   (req, res) => {
     const postcardFile = req.files.postcard[0]
     matchFromRecognizer(postcardFile.path)
-      .then(code => res.send({ code: 200, message: code }))
+      .then(code => res.redirect(`${req.baseUrl}/code/${code}`))
       .catch(err =>
         res.send({ code: 500, message: `Something went wrong: ${err}` })
       )
