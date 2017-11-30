@@ -12,6 +12,10 @@ const matchFromRecognizer = require('../handlers/matchFromRecognizer')
 
 const router = express.Router()
 
+const extensionMapping = {
+  jpeg: 'jpg'
+}
+
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, path.resolve(__dirname, '..', 'public', 'upload', file.fieldname))
@@ -20,7 +24,7 @@ const storage = multer.diskStorage({
     const uuid = uuidV4()
     const extArray = file.mimetype.split('/')
     const extension = extArray[extArray.length - 1]
-    const filename = `${uuid}.${extension}`
+    const filename = `${uuid}.${extensionMapping[extension] || extension}`
     if (!req.tempAssets) {
       req.tempAssets = []
     }
@@ -32,6 +36,20 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({ storage: storage })
+
+const storageTemp = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, path.resolve(__dirname, '..', 'public', 'upload', file.fieldname))
+  },
+  filename: function(req, file, cb) {
+    const extArray = file.mimetype.split('/')
+    const extension = extArray[extArray.length - 1]
+    const filename = `temp.${extensionMapping[extension] || extension}`
+    cb(null, filename)
+  }
+})
+
+const uploadTemp = multer({ storage: storageTemp })
 
 router.get('/', (req, res) => {
   res.send('Please specify postcard code')
@@ -70,7 +88,7 @@ router.post(
 
 router.post(
   '/match',
-  upload.fields([{ name: 'postcard', maxCount: 1 }]),
+  uploadTemp.fields([{ name: 'postcard', maxCount: 1 }]),
   (req, res) => {
     const postcardFile = req.files.postcard[0]
     matchFromRecognizer(postcardFile.path)

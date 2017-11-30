@@ -2,6 +2,14 @@ const db = require('../database')
 
 const urlPrefix = process.env.SERVER_HOST
 
+const getUrl = (url, type) => {
+  let realUrl = url
+  if (url[0] === '/') {
+    realUrl = `${urlPrefix}/upload/${type}${realUrl}`
+  }
+  return realUrl
+}
+
 module.exports = ({ code }) => {
   return db
     .first()
@@ -16,15 +24,12 @@ module.exports = ({ code }) => {
           return {
             ...postcard,
             assets: assets.map(asset => {
-              let realUrl = asset.url
-              if (asset.url[0] === '/') {
-                realUrl = `${urlPrefix}/upload/${asset.type}${realUrl}`
-              }
               return {
                 ...asset,
-                url: realUrl
+                url: getUrl(asset.url, asset.type)
               }
-            })
+            }),
+            postcard: getUrl(`/${postcard.uuid}.jpg`, 'postcard')
           }
         })
     )
