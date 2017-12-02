@@ -25,3 +25,6 @@
 4. (POST) /postcard/match
 - fields: postcard(File)
 - return { code: 200, message: [postcard data] } or { code: 500, message: [err] }
+
+5. (GET) /postcard/file
+- return a list of current uploaded files

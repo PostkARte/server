@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const express = require('express')
 const multer = require('multer')
@@ -9,6 +10,7 @@ const createPostcard = require('../handlers/createPostcard')
 const getPostcardWithAssets = require('../handlers/getPostcardWithAssets')
 const saveToRecognizer = require('../handlers/saveToRecognizer')
 const matchFromRecognizer = require('../handlers/matchFromRecognizer')
+const listAssets = require('../handlers/listAssets')
 
 const router = express.Router()
 
@@ -16,9 +18,11 @@ const extensionMapping = {
   jpeg: 'jpg'
 }
 
+const getFolder = (folder = '') => path.resolve(__dirname, '..', 'public', 'upload', folder)
+
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, path.resolve(__dirname, '..', 'public', 'upload', file.fieldname))
+    cb(null, getFolder(file.fieldname))
   },
   filename: function(req, file, cb) {
     const uuid = uuidV4()
@@ -39,7 +43,7 @@ const upload = multer({ storage: storage })
 
 const storageTemp = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, path.resolve(__dirname, '..', 'public', 'upload', file.fieldname))
+    cb(null, getFolder(file.fieldname))
   },
   filename: function(req, file, cb) {
     const extArray = file.mimetype.split('/')
@@ -53,6 +57,10 @@ const uploadTemp = multer({ storage: storageTemp })
 
 router.get('/', (req, res) => {
   res.send('Please specify postcard code')
+})
+
+router.get('/file', (req, res) => {
+  res.send(listAssets(getFolder()))
 })
 
 router.get('/code/:code', (req, res) => {
