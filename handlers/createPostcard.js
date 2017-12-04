@@ -3,10 +3,10 @@ const db = require('../database')
 
 const hashids = new Hashids('PostkARte', 6, 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789')
 
-module.exports = ({ assets, latitude, longitude, uuid }) => {
+module.exports = ({ assets, latitude, longitude, text, uuid }) => {
   return db.transaction(trx =>
     trx
-      .insert({ code: 'temp', latitude, longitude, uuid })
+      .insert({ code: 'temp', latitude, longitude, text, uuid })
       .into('postcard')
       .then(data => data[0])
       .then(postcardId => {

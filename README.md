@@ -19,7 +19,7 @@
 - return postcard data corresponding to the provided code
 
 3. (POST) /postcard
-- fields: postcard(File), image(Array[File]), video(Array[File]), audio(Array[File]), latitude(Float), longitude(Float)
+- fields: postcard(File), text(String), image(Array[File]), video(Array[File]), audio(Array[File]), latitude(Float), longitude(Float)
 - return { code: 200, message: [code] } or { code: 500, message: [err] }
 
 4. (POST) /postcard/match
