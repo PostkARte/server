@@ -83,7 +83,10 @@ router.post(
     const postcardFile = req.files.postcard[0]
     createPostcard({
       ...req.body,
-      assets,
+      assets: assets.map(asset => ({
+        ...asset,
+        path: req.files[asset.type].find(f => f.filename === asset.filename).path
+      })),
       uuid: postcardFile.filename.split('.')[0]
     })
       .then(code => saveToRecognizer({ code, path: postcardFile.path }))
