@@ -11,9 +11,9 @@ const convertDMSToDD = (degrees, minutes, seconds, direction) => {
 }
 
 module.exports = filepath =>
-  new Promise((resolve, reject) => {
-    try {
-      new ExifImage({ image: filepath }, (error, exifData) => {
+  new Promise((resolve) => {
+    new ExifImage({ image: filepath }, (error, exifData) => {
+      try {
         if (error) {
           throw new Error(error)
         }
@@ -37,12 +37,12 @@ module.exports = filepath =>
           GPSLongitudeRef
         )
         resolve({ latitude, longitude })
-      })
-    } catch (error) {
-      console.log('EXIF Error: ' + error.message)
-      reject({
-        latitude: null,
-        longitude: null
-      })
-    }
+      } catch (error) {
+        console.log('EXIF Error: ' + error.message)
+        resolve({
+          latitude: null,
+          longitude: null
+        })
+      }
+    })
   })
